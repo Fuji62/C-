@@ -1,0 +1,52 @@
+/*まだできてない
+ ============================================================================
+ Name        : fren7.c
+ Author      :
+ Version     :
+ Copyright   : Your copyright notice
+ Description : main関数でキーボードから３つの英単語を読み込む。
+ 　　　　　　　３つの数値のアドレスを関数sort3に渡し、関数内で降順に並べ替え、
+ 　　　　　　　main関数で表示する。
+ ============================================================================
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#define scanf(a,b) (fflush(0),scanf(a,b))
+#define NUM 3
+
+void swap(char *x, char *y){
+	char temp = *x;
+	*x = *y;
+	*y = temp;
+}
+
+void sortNum(char *words){
+	for(int i = 0; i < NUM; i++){
+		if(words[i] < words[i + 1]){
+			swap(words, words + 1);
+			printf("%s %s",(words), (words + i));
+		}else{
+
+		}
+	}
+}
+
+int main(void) {
+	char words[NUM][10];//words[単語数][文字数]
+	printf("%dつの英単語を半角(a～z)で入力してください。\n", NUM);
+	for(int i = 0; i < NUM; i++){
+		printf("%dつ目：", i + 1);
+		//fflush(stdout);
+		scanf("%s", &words[i][10]);
+	}
+
+	puts("\n入力された単語を降順に並べ替えました。\n");
+	sortNum(words);
+
+//	for(int i = 0; i < NUM; i++){
+//		printf("%s", words);
+//	}
+
+	return EXIT_SUCCESS;
+}
