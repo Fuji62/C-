@@ -1,0 +1,44 @@
+/*
+ ============================================================================
+ Name        : fren4.c
+ Author      :
+ Version     :
+ Copyright   : Your copyright notice
+ Description : 配列に格納した数値が偶数の場合、削除して後方のデータを詰める
+ ============================================================================
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#define SIZE 20
+
+int main(void) {
+	int data[SIZE] = {55,6,12,54,43,9,17,1,41,23,89,99,14,72,44,42,11,14,99,49};
+	int *data_p, i, cnt = 0;
+	data_p = data;
+
+	//出力(削除前)
+    printf("data(削除前):");
+    for(i = 0; i < SIZE; i++){
+        printf("%d ",*(data_p + i));
+    }
+    puts("");
+
+    //並べ替え
+    for(i = 0; i < SIZE; i++){
+    	if(*(data_p + i) % 2 == 0){
+    		cnt++;
+    	}else{
+    		*(data_p + i - cnt) = *(data_p + i);
+    	}
+    }
+    //出力(削除後)
+    printf("data(削除後):");
+    for(i = 0; i < SIZE - cnt; i++){
+        printf("%d ",*(data_p + i));
+    }
+    puts("");
+    printf("データ数:%d", SIZE - cnt);
+
+	return EXIT_SUCCESS;
+}
