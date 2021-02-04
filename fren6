@@ -1,0 +1,46 @@
+/*
+ ============================================================================
+ Name        : fren6.c
+ Author      :
+ Version     :
+ Copyright   : Your copyright notice
+ Description : main関数で収入、支出、残高の配列を宣言し、３つの配列を関数calc
+ 　　　　　　　に渡す。calc関数は配列をポインタで受け取る。関数内で残高を計算
+ 　　　　　　　し、残高の配列に記録する。
+ ============================================================================
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#define NUMBER 10
+
+void calc(int *income, int *expenses, int *balance, int n){
+	for(int i = 0; i < n; i++){
+		if(i > 0){
+			balance[i] = balance[i - 1];
+			balance[i] += income[i] - expenses[i];
+		}else{
+			balance[i] += income[i] - expenses[i];
+		}
+	}
+}
+
+int main(void) {
+	int income[10] = {335, 1000, 0, 0, 900, 0, 0, 1200, 0, 0};
+	int expenses[10] = {0, 0, 500, 300, 0, 100, 200, 0, 300, 400};
+	int balance[10] = {0};//3435 - 1800 = 1635
+	int n = NUMBER;
+
+	//配列の先頭アドレスをcalc()に渡す
+	calc(income, expenses, balance, n);
+
+	//収支表の出力
+	puts(" ____________________");
+	puts("¦ 収入 | 支出 | 残高 ¦");
+	puts("¦￣￣￣¦￣￣￣¦￣￣￣¦");
+	for(int i = 0; i < n; i++){
+		printf("¦ %4d ¦ %4d ¦ %4d ¦\n", income[i], expenses[i], balance[i]);
+	}
+	puts(" ￣￣￣￣￣￣￣￣￣￣");
+
+	return EXIT_SUCCESS;
+}
