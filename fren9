@@ -1,0 +1,57 @@
+/*
+ ============================================================================
+ Name        : fren9.c
+ Author      : 藤本智哉
+ Description : 商品コード、単価、売上数量をmain関数で配列宣言、初期化子で
+ 　　　　　　　初期設定し、各配列を関数junに渡す。関数junは各配列をポインタ
+ 　　　　　　　として受け取り、*売上金額(単価×売上数量)の降順に順位配列に
+ 　　　　　　　順位を入れる。同売り上げは同順位とする。ソートせず順位づけする。
+ ============================================================================
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void jun(int (*price)[], int (*sold)[], int (*rank)[], int n){
+	for(int i = 0; i < n; i++){
+		(*rank)[i] = 1;
+		for(int j = 0; j < n; j++){
+			if((*price)[i] * (*sold)[i] < (*price)[j] * (*sold)[j]){
+				(*rank)[i]++;
+			}
+		}
+	}
+}
+int main(void) {
+	char code[][5] = {"A197","A459","A293","A220","A571",
+					 "A725","A929","A731","A254","A467"};
+	int price[] = {1590,1220,1370,500,1850,650,530,1000,380,570};
+	int sold[] = {131,135,176,200,113,138,160,100,27,139};
+	int rank[10];
+	const int n = 10;
+	jun(&price, &sold, &rank, n);
+
+	printf("__________________________________________________________________________________\n");
+	printf("¦商品コード");
+	for(int i = 0; i < n; i++){
+		printf("¦ %4s ", code[i]);
+	}
+	printf("¦\n");
+	printf("¦単価　　　");
+	for(int i = 0; i < n; i++){
+		printf("¦ %4d ", price[i]);
+	}
+	printf("¦\n");
+	printf("¦売上数量　");
+	for(int i = 0; i < n; i++){
+		printf("¦ %4d ", sold[i]);
+	}
+	printf("¦\n");
+	printf("¦順位　　　");
+	for(int i = 0; i < n; i++){
+		printf("¦ %4d ", rank[i]);
+	}
+	printf("¦\n");
+	printf("￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣");
+	return EXIT_SUCCESS;
+}
