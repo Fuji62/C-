@@ -1,5 +1,4 @@
-/*まだできてない
- /*まだできてない
+/*
  ============================================================================
  Name        : fren7.c
  Author      : 藤本智哉
@@ -13,72 +12,41 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define scanf(a,b) (fflush(0),scanf(a,b))
-#define NUM 3 //入力する単語数
-//		printf("%s\n", *(words + i));配列の使い方①
-//		printf("%s\n", words[i]);配列の使い方②
+#define NUM 3
 
-//void sortNum(char (*words)[]){
-//	int i, j;
-//	char tmp;
-//	for(i = 0; i < NUM; i++){printf("***[i]***\n");
-//		for(j = 0; j < NUM; j++){
-//			if( (*words)[j - 1] < (*words)[j]){printf("***[j]***\n");
-//				tmp = (*words)[i - 1];
-//				(*words)[j - 1] = (*words)[j];
-//				(*words)[j] = tmp;
-//			}
-//		}
-//	}
-//}
-void sortNum(char (*words)[]){
-  int i, j;
-  char temp;
-  printf("１つ目：%s\n", (*words)[0]);
-  printf("２つ目：%s\n", (*words)[1]);
-  printf("３つ目：%s\n", (*words)[2]);
-  for(i = 0; i < (NUM - 1); i++){
-    for(j = (NUM - 1); j > i; j--){
-      if((*words)[j - 1] > (*words)[j]){
-        temp = (*words)[j - 1];
-        (*words)[j - 1] = (*words)[j];
-        (*words)[j] = temp;
-      }
-    }
-  }
+void sortNum(char (*words)[128]){//バブルソートで降順に並べ替える
+	for(int i = 0; i < NUM; i++){
+		printf("%dつ目：%s\n", i + 1, words[i]);
+	}
+	int i, j;
+	char temp[128];
+
+	for(i = 1; i < NUM; i++){
+		for(j = 1; j < NUM; j++){
+			if(strcmp(words[j - 1], words[j]) < 0){
+				strcpy(temp, words[j - 1]);
+				strcpy(words[j - 1], words[j]);
+				strcpy(words[j], temp);
+			}
+		}
+	}
 }
-
 int main(void) {
 	char words[NUM][128];//words[単語数][文字数]
-	printf("%dつの英単語を半角(a～z)で入力してください。\n", NUM);
+	printf("%dつの英単語を半角英字(a～z)で入力してください。\n", NUM);
 	for(int i = 0; i < NUM; i++){
 		printf("%dつ目：", i + 1);
 		scanf("%s", words[i]);
 	}
+
 	sortNum(words);
-	printf("ソート完了\n");
+	puts("\n入力された単語を降順に並べ替えました。\n");
 
 	for(int i = 0; i < NUM; i++){
-		printf("%dつ目：%s\n", (i + 1), words[i]);
+		printf("%dつ目：%s\n", i + 1, words[i]);
 	}
+
 	return EXIT_SUCCESS;
 }
-
-/********************************************************/
-//void bubbleSort(int numbers[], int array_size){
-//void sortNum(char (*words)[]){
-//  int i, j;
-//  char temp;
-//
-//  for(i = 0; i < (NUM - 1); i++){
-//    for(j = (NUM - 1); j > i; j--){
-//      if(words[j-1] > words[j]){
-//        temp = words[j-1];
-//        words[j-1] = words[j];
-//        words[j] = temp;
-//      }
-//    }
-//  }
-//}
-
-
