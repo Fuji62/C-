@@ -1,0 +1,50 @@
+/*
+ ============================================================================
+ Name        : fren10.c
+ Author      : 藤本智哉
+ Description : 商品コードをキーボードから読み込み、商品コードの配列を検索し、
+ 　　　　　　　商品コード、単価、売上数量、売上金額(単価×売上数量)を出力する。
+ ============================================================================
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define scanf(a,b) (fflush(0),scanf(a,b))
+#define NUM 10
+
+int bsh(char (*code)[5], char (*pcode)[5]){
+	for(int i = 0; i < NUM; i++){
+		if(strcmp(code[i], pcode) == 0){
+			return i;
+		}
+	}
+	return -1;
+}
+
+int main(void) {
+	char code[][5] = {"A197","A459","A293","A220","A571",
+					 "A725","A929","A731","A254","A467"};
+	                 //bshに渡す。
+	int price[] = {1590,1220,1370,500,1850,650,530,1000,380,570};
+	int sold[] = {131,135,176,200,113,138,160,100,27,139};
+	char pcode[5];
+
+	printf("検索する商品コードを入力してください。\n");
+	printf("商品コード：");
+	scanf("%s",pcode);
+	puts("");
+
+	int result = bsh(code, pcode);
+
+	printf("【 検索結果 】\n");
+	if(result != - 1){
+		printf(" 商品コード：%s\n",code[result]);
+		printf(" 単価　　　：%d\n",price[result]);
+		printf(" 売上数量　：%d\n",sold[result]);
+		printf(" 売上金額　：%d\n",price[result] * sold[result]);
+	}else{
+		printf(" 該当する商品コードがありません。\n");
+	}
+
+	return EXIT_SUCCESS;
+}
