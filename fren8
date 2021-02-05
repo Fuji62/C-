@@ -1,0 +1,47 @@
+/*
+ ============================================================================
+ Name        : fren8.c
+ Author      : 藤本智哉
+ Description : 商品コードをmain関数で配列宣言、初期化子で初期値を設定し、
+ 　　　　　　　関数scd_sortにわたす。
+ 　　　　　　　scd_sortは配列をポインタとして受け取り、関数内で商品コードの
+ 　　　　　　　昇順に並べ替える。main関数に戻り、配列の内容を出力する。
+ ============================================================================
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h> //文字列を扱うためのヘッダファイル
+
+void scd_sort(char (*scd)[10], int n){
+	int i, j;
+	char tmp[10];
+
+	for(i = 1; i < n; i++){
+		for(j = 1; j < n; j++){
+			if(strcmp(scd[j - 1], scd[j]) > 0){
+				strcpy(tmp, scd[j - 1]);
+				strcpy(scd[j - 1], scd[j]);
+				strcpy(scd[j], tmp);
+			}
+		}
+	}
+}
+
+int main(void) {
+	char scd[][10] = {"A197","A459","A293","A220","A571",
+					  "A725","A929","A731","A254","A467"};
+	const int n = 10;
+	printf("ソート前の商品コード\n");
+	for(int i = 0; i < n; i++){
+		printf("%s\n", scd[i]);
+	}
+	scd_sort(scd, n);
+	printf("\n商品コードを昇順に整列しました。\n");
+
+	printf("\nソート後の商品コード\n");
+	for(int i = 0; i < n; i++){
+		printf("%s\n", scd[i]);
+	}
+	return EXIT_SUCCESS;
+}
