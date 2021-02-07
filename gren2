@@ -1,0 +1,79 @@
+/*
+ ============================================================================
+ Name        : gren2.c
+ Author      : 藤本智哉
+ Description : 会員簿のデータを構造体の配列に記憶させ、生年月日の降順に出力する
+ ============================================================================
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#define NUMBER 15 //会員の人数
+#define NAME_LEN 128
+#define KANA_LEN 128
+
+typedef struct{
+	int y;
+	int m;
+	int d;
+}Date;
+
+typedef struct{
+	int id;
+	char name[NAME_LEN];
+	char kana[KANA_LEN];
+	Date birthday;
+}Human;
+
+void date_sort(Human *m){//バブルソートで降順に並べ替える
+	int i, j;
+	Human temp;
+	for(i = 1; i < NUMBER; i++){
+		for(j = 1; j < NUMBER; j++){
+			if(m[j - 1].birthday.y * 10000 +
+					m[j - 1].birthday.m * 100 +
+					m[j - 1].birthday.d <
+					m[j].birthday.y * 10000 +
+					m[j].birthday.m * 100 +
+					m[j].birthday.d){
+				temp.birthday = m[j - 1].birthday;
+				m[j - 1].birthday = m[j].birthday;
+				m[j].birthday = temp.birthday;
+			}
+		}
+	}
+	printf("\n会員の生年月日を降順にソートしました。\n\n");
+}
+
+void birthday_info(Human m[]){
+	printf("【誕生日データ】\n");
+	for(int i = 0; i < NUMBER; i++){
+		printf("%2d.%d年%2d月%2d日\n", i + 1, m[i].birthday.y,
+				m[i].birthday.m, m[i].birthday.d);
+	}
+}
+
+int main(void) {
+	Human member[] = {//                                        [birthday]
+			   //[id]   [name]         [kana]                   [y]   [m][d]
+				{   91, "玉江 カタル", "タマエ カタル",         {2006, 8,13}},
+				{  902, "榎本 剛",     "エノモト ツヨシ",       {2005, 9, 3}},
+				{ 1903, "二神 龍太郎", "フタガミ リュウタロウ", {2007, 3,26}},
+				{ 1904, "田中 良美",   "タナカ ヨシミ",         {2008, 6, 8}},
+				{11905, "吉田 徹",     "ヨシダ トオル",         {2009, 2,11}},
+				{11906, "高橋 純",     "タカハシ ジュン",       {2006, 7, 4}},
+				{11907, "今田 隆弘",   "イマダ タカヒロ",       {2007, 8,23}},
+				{11908, "鈴木 博",     "スズキ ヒロシ",         {2008, 6,19}},
+				{20012, "浦野 晶子",   "ウラノ ショウコ",       {2009,10, 2}},
+				{21301, "井上 篤志",   "イノウエ アツシ",       {2004, 7,19}},
+				{33002, "倉石 美鈴",   "クライシ ミスズ",       {2008, 3,16}},
+				{35039, "小野寺 健",   "オノデラ ケン",         {2007,12,24}},
+				{37415, "山田 太朗",   "ヤマダ タロウ",         {2008, 5,15}},
+				{40653, "浜崎 静香",   "ハマサキ シズカ",       {2006,11,19}},
+				{41063, "藤田 由貴",   "フジタ ユキ",           {2005,10, 9}}
+	};
+	birthday_info(member);
+	date_sort(member);
+	birthday_info(member);
+
+	return EXIT_SUCCESS;
+}
