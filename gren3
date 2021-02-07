@@ -1,0 +1,155 @@
+/*まだ終わってない
+ ============================================================================
+ Name        : gren3.c
+ Author      : 藤本智哉
+ Description : 会員名簿のデータを次の手順で出力する。
+ ➀会員名簿のデータを「会員ID」「会員氏名」「フリガナ」「生年月日」配列に
+ 　初期化子で設定する
+ ➁会員情報を記録する構造体の配列をリスト構造として構成する。構造体配列を
+ 　宣言する際、上記項目の他に次データへの「リスト構造のポインタ」項目を追加
+ 　して宣言する。
+ ➂次に各配列のデータを構造体の配列に記憶させていくとき、フリガナの昇順に
+ 　なるよう「リスト構造のポインタ」の値を設定し記憶させる。
+ ➃全てのデータを構造体の配列に記憶させた後、「リスト構造のポインタ」を
+ 　たどり、フリガナの昇順に並んだ一覧表を出力する。
+ ============================================================================
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define NUMBER 15 //会員の人数
+#define NAME_LEN 128
+#define KANA_LEN 128
+
+typedef struct{
+	int y;
+	int m;
+	int d;
+}Date;
+
+typedef struct human{
+	int id;
+	char name[NAME_LEN];
+	char kana[KANA_LEN];
+	Date birthday;
+	struct human *next;
+}Human;
+
+//void kana_sort(char (*k)[KANA_LEN], Human *start){//昇順に並べ替える
+//	int i, j;
+//	char temp[KANA_LEN];
+//	for(i = 1; i < NUMBER; i++){
+//		for(j = 1; j < NUMBER; j++){
+//			if(strcmp(k[j - 1], k[j]) > 0){
+//				strcpy(temp, k[j - 1]);
+//				strcpy(k[j - 1], k[j]);
+//				strcpy(k[j], temp);
+//
+//				//start = k[j];//フリガナの並び順を記憶させる
+//			}
+//		}
+//	}
+//}
+
+void kana_sort(char (*kana)[KANA_LEN], int (*order)[NUMBER]){
+	int i, j;
+	char temp[KANA_LEN];
+	for(i = 1; i < NUMBER; i++){
+		for(j = 1; j < NUMBER; j++){
+			if(strcmp(kana[j - 1], kana[j]) > 0){
+				strcpy(temp, kana[j - 1]);
+				strcpy(kana[j - 1], kana[j]);
+				strcpy(kana[j], temp);
+			}
+			(*order)[i] = j;
+		}
+	}
+}
+
+
+
+//void print(Human *p, Human *start){
+//	//構造体データの出力
+//	printf("【会員データ】\n");
+//	printf("会員ID\t会員氏名\tフリガナ\t　　　　　生年月日\n");
+//	p = start;
+//	while(p != NULL){ //フリガナ
+//		printf(" %05d  %10s\t %18s \t%4d年%2d月%2d日\n", p->id, p->name, p->kana,
+//		p->birthday.y, p->birthday.m, p->birthday.d);
+//		p = p->next;
+//	}
+//}
+
+int main(void) {
+	int id[NUMBER] = {
+			91,902,1903,1904,11905,11906,11907,11908,20012,21301,
+			33002,35039,37415,40653,41063};
+	char name[NUMBER][NAME_LEN] = {
+			"玉江 カタル","榎本 剛","二神 龍太郎","田中 良美","吉田 徹",
+			"高橋 純","今田 隆弘","鈴木 博","浦野 晶子","井上 篤志",
+			"倉石 美鈴","小野寺 健","山田 太朗","浜崎 静香","藤田 由貴"};
+	char kana[NUMBER][KANA_LEN] = {
+			"タマエ カタル","エノモト ツヨシ","フタガミ リュウタロウ",
+			"タナカ ヨシミ","ヨシダ トオル","タカハシ ジュン",
+			"イマダ タカヒロ","スズキ ヒロシ","ウラノ ショウコ",
+			"イノウエ アツシ","クライシ ミスズ","オノデラ ケン",
+			"ヤマダ タロウ","ハマサキ シズカ","フジタ ユキ"};
+
+	int ymd[NUMBER][3] = {
+			{2006, 8,13},{2005, 9, 3},{2007, 3,26},{2008, 6, 8},{2009, 2,11},
+			{2006, 7, 4},{2007, 8,23},{2008, 6,19},{2009,10, 2},{2004, 7,19},
+			{2008, 3,16},{2007,12,24},{2008, 5,15},{2006,11,19},{2005,10, 9}};
+
+	Human *p, *start; //構造体Humanのポインタ
+	int (*order)[NUMBER]; //構造体の並び順を記憶させる配列
+
+	for(int i = 0; i < NUMBER; i++){
+		//構造体0番目を生成
+		if(i == 0){
+			p = malloc(sizeof(Human));
+			start = p;
+		}else{
+			p->next = malloc(sizeof(Human));
+			p = p->next;
+		}
+		//構造体1～NUMBER番目を生成
+		p->id = id[i];
+		strcpy(p->name, name[i]);
+		strcpy(p->kana, kana[i]);
+		p->birthday.y = ymd[i][0];
+		p->birthday.m = ymd[i][1];
+		p->birthday.d = ymd[i][2];
+		p->next = NULL;
+
+	}
+//	print(p, start); //ソート前の出力
+	//構造体データの出力
+	printf("【会員データ】\n");
+	printf("会員ID\t会員氏名\tフリガナ\t　　　　　生年月日\n");
+	p = start;
+	while(p != NULL){ //フリガナ
+		printf(" %05d  %10s\t %18s \t%4d年%2d月%2d日\n", p->id, p->name, p->kana,
+		p->birthday.y, p->birthday.m, p->birthday.d);
+		p = p->next;
+	}
+
+	kana_sort(kana, &order);
+//	kana_sort(kana, start); //フリガナの昇順にソートする
+
+
+	puts("\n 会員データをフリガナの昇順に整列しました。\n");
+//	print(p, start); //ソート後の出力
+	//構造体データの出力
+	printf("【会員データ】\n");
+	printf("会員ID\t会員氏名\tフリガナ\t　　　　　生年月日\n");
+	p = start;
+	while(p != NULL){ //フリガナ
+		//printf(" %05d  %10s\t %18s \t%4d年%2d月%2d日\n", p->id, p->name, p->kana,
+		//p->birthday.y, p->birthday.m, p->birthday.d);
+		printf(" %05d  %10s\t %18s \t%4d年%2d月%2d日\n", p->id, p->name, p->kana,
+		p->birthday.y, p->birthday.m, p->birthday.d);
+		p = p->next;
+	}
+
+	return EXIT_SUCCESS;
+}
