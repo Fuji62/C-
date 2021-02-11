@@ -1,7 +1,7 @@
 /*
  ============================================================================
  Name        : gren4.c
- Author      :
+ Author      : 藤本智哉
  Version     :
  Copyright   : Your copyright notice
  Description : 会員名簿のデータを構造体の配列に記憶させ、購入一覧表の購入金額
@@ -15,7 +15,7 @@
 #define NUMBER 15 //会員の人数
 #define STR_LEN 128
 //****************************************************************************
-typedef struct{
+typedef struct{                                           /* 構造体の宣言 */
 	int id;
 	char name[STR_LEN];
 	char kana[STR_LEN];
@@ -24,21 +24,29 @@ typedef struct{
 }Person;
 
 //****************************************************************************
-void amount_summary(Person *member, int purchase_data[], Person *p){
-
+                                               /* 会員ごとの購入金額の集計 */
+void amount_summary(Person member[], int sales_data[2][NUMBER], Person *p){
+	for(int i = 0; i < NUMBER; i++){
+		for(int j = 0; j < NUMBER; j++){
+			if(sales_data[0][i] == (p + j)->id){
+				(p + j)->purchase_price += sales_data[1][i];
+			}
+		}
+	}
 }
 //****************************************************************************
-void print_data(Person *member){/*構造体データの出力*/
+void print_data(Person member[], Person *p){          /*構造体データの出力*/
 	printf("購入者の一覧を表示します。\n\n");
 	printf("【会員データ】\n");
 	printf(" ID　　 氏名　　　　購入金額\n");
 	for(int i = 0; i < NUMBER; i++){
-		printf(" %05d\t%-14s\t%5d\n",
-		member[i].id, member[i].name,member[i].purchase_price );
+		if((p + i)->purchase_price != 0){
+			printf(" %05d\t%-14s\t%5d\n",
+			(p + i)->id, (p + i)->name, (p + i)->purchase_price);
+		}
 	}
-}
 //****************************************************************************
-int main(void){
+}int main(void){
 	Person member[] = {
 		{   91, "玉江 カタル", "タマエ カタル",         20060813, 0},
 		{  902, "榎本 剛",     "エノモト ツヨシ",       20050903, 0},
@@ -57,17 +65,29 @@ int main(void){
 		{41063, "藤田 由貴",   "フジタ ユキ",           20051009, 0}
 	};
 
-	int purchase_data[NUMBER][] = {
-			{11907,33002,1903,21301,33002,1913,41063,21301,11907,41063,
+	int sales_data[2][NUMBER] = {
+			{11907,33002,1903,21301,33002,1903,41063,21301,11907,41063,
 			1903,1903,41063,1903,21301}, //購入者ID
 			{33400,72500,40200,10900,81200,86000,72000,18300,86000,74600,
 			17700,89900,2400,44000,51100}
-	}; //購入金額
+	}; //購入者idに対応する購入金額を二次元配列に格納
 
-	Person *p;
+	Person *p = member; //構造体位置を示すポインタを宣言
 
-	amount_summary(member, &purchase_data, p);
-	print_data(member); //購入者の出力
+	amount_summary(member, sales_data, p); //会員ごとの購入金額の集計
+	print_data(member, p); //購入者のみ出力
 
 	return EXIT_SUCCESS;
 }
+
+/*
+ 購入者の一覧を表示します。
+
+【会員データ】
+ ID　　 氏名　　　　購入金額
+ 01903	二神 龍太郎	277800
+ 11907	今田 隆弘 	119400
+ 21301	井上 篤志 	80300
+ 33002	倉石 美鈴 	153700
+ 41063	藤田 由貴 	149000
+ */
