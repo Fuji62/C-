@@ -7,83 +7,115 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 //*****************************************************************************
-typedef struct{ //トランプの構造体(4種類×13枚)
-	int mark;
+typedef struct{ //トランプを表す構造体(4種類×13枚)
+	int mark[12];
 	int no;
 }Card;
 
-typedef struct dealer{ //ディーラーを表す構造体
-	int mark;
-	int no;
-	int score;
-}Dealer;
-
-typedef struct player{ //プレイヤーを表す構造体
-	int mark;
-	int no;
-	int score;
-}Player;
+typedef struct{ //	人間を表す構造体
+	Card hands[12];
+	int hands_num;
+	int hands_score;
+}Person;
 
 //*****************************************************************************
-shuffleCards(Card deck[], int size){
+void shuffleCards(Card deck[], int size){ //52枚のカードをランダムに配置する
 	int i, j;
-	
+	Card c;
 	srand((unsigned int)time(NULL));
 	for(i = 0; i < size; i++){
-		
+		j = rand() % size;
+		c = deck[i];
+		deck[i] = deck[j];
+		deck[j] = c;
 	}
 }
 //*****************************************************************************
-//void gameStart(){
-//	printf("ゲームを開始。\n");
-//	printf("カードを配ります。\n");
-//	for(int i = 0; i < 2; i++){
-//		trump->mark = rand();
-//		trump->no = rand();
-//	}
-//}
-//*****************************************************************************
-void drawCard(){
+void drawCard(Card deck[], int *deck_num, Person *p, int display){
+	Card c;
+	c = deck[*deck_num];
 
+	deck_num += 1;
+	p->hands[p->hands_num]  = c;
+	p->hands_num += 1;
+
+	if(c.no >= 11){
+		p->hands_score += 10;
+	}else{
+		p->hands_score += c.no;
+	}
+
+	if(display == 1){
+		printHand(deck, p, 0);
+	}
 }
 //*****************************************************************************
-void printHand(){
-	printf("【あなたの手札】\n");
-	printf("________________\n");//14
-	printf("|　　　　の　|\n");
-	printf("￣￣￣￣￣￣￣￣\n");
+void printHand(Card c, Person p, int print_num){
+	char str[32];
+	if(print_num == 0){
+		strcpy(str, "あなたが引いたカード");
+	}else{
+		strcpy(str, "ディーラーが引いたカード");
+	}
 
-	printf("________________\n");//14
-	printf("|スペードの11　|\n");
-	printf("￣￣￣￣￣￣￣￣\n");
-
-
-
+	switch(c.no){
+		case 1:
+			printf("%sは「%s」のAです。", str, c.mark);
+			break;
+		case 10:
+			printf("%sは「%s」の10です。", str, c.mark);
+			break;
+		case 11:
+			printf("%sは「%s」のJです。", str, c.mark);
+			break;
+		case 12:
+			printf("%sは「%s」のQです。", str, c.mark);
+			break;
+		case 13:
+			printf("%sは「%s」のKです。", str, c.mark);
+			break;
+		default:
+			printf("%sは「%s」の%dです", str, c.mark, c.no);
+			break;
+	}
+	printf("合計点【%2d】", p.hands_score);
 }
-//*****************************************************************************
-void gameResults(){}
 //*****************************************************************************
 
 int main(void) {
 
-	int i, j, k = 0;
-	Card deck[52]; //デックの初期化
-	
-	for(i = 0; i < 4; i++){         //カードの種類: 0～3(４種類)
-		for(j = 0; j < 13; j++){    //カードの数  : 1～13(13枚)
-			deck.mark[i] = i;
-			deck.no[i] = j + 1;
+	/*** 初期設定 **********************************************/
+	int i, j;
+	Card deck[52];                               //デックの作成・初期化
+	int deck_num = 0;                            //デックを数えるカウンタ
+	char mark[][12] = {"スペード", "クラブ", "ハート", "ダイヤ"};
+
+	for(i = 0; i < 4; i++){                      //カードの種類: 0～3(４種類)
+		for(j = 0; j < 13; j++){                 //カードの数  : 1～13(13枚)
+			strcpy(deck[j].mark, mark[i]);
+			deck[j].no = j + 1;
 		}
 	}
-	shuffleCards();
-	
-//	gameStart();
+	shuffleCards(deck, 52);                      //デックをランダムに配置
+
+	Person player;                               //プレイヤーを作成・初期化
+	Person dealer;                               //ディーラーを作成・初期化
+
+	drawCard(deck, &deck_num, &player, 1);       //最初の手札2枚を引く
+	drawCard(deck, &deck_num, &player, 1);
+	drawCard(deck, &deck_num, &dealer, 1);
+	drawCard(deck, &deck_num, &dealer, 0);
+
+	/*** プレイヤーの番 ****************************************/
 
 
+	/*** ディーラーの番 ****************************************/
 
 
+	/*** 結果判定 **********************************************/
 
 	return EXIT_SUCCESS;
 }
